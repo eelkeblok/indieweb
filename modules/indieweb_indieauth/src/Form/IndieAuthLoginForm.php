@@ -9,8 +9,30 @@ use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Url;
 use IndieAuth\Client;
 use p3k\HTTP;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class IndieAuthLoginForm.
+ *
+ * @package Drupal\indieweb_indieauth\Form
+ */
 class IndieAuthLoginForm extends FormBase {
+
+  /**
+   * The external auth authmap service.
+   *
+   * Note: this may be NULL when the service is not available.
+   *
+   * @var \Drupal\externalauth\AuthmapInterface
+   */
+  protected $externalAuthMap;
+
+  /**
+   * @param \Drupal\externalauth\AuthmapInterface $externalAuthMap
+   */
+  public function setExternalAuthMap(AuthmapInterface $externalAuthMap) {
+    $this->externalAuthMap = $externalAuthMap;
+  }
 
   /**
    * {@inheritdoc}
@@ -109,6 +131,16 @@ class IndieAuthLoginForm extends FormBase {
     else {
       $this->messenger()->addMessage($this->t('No authorization endpoint found.'));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $form = parent::create($container);
+
+    $container->get('externalauth.authmap', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+    return $form;
   }
 
 }
