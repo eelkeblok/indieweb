@@ -3,6 +3,7 @@
 namespace Drupal\indieweb_indieauth\Form;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
@@ -39,6 +40,16 @@ class IndieAuthLoginForm extends FormBase {
   }
 
   /**
+   * Get the configuration for the indieauth module.
+   *
+   * @return \Drupal\Core\Config\ImmutableConfig
+   *   The module's configuration.
+   */
+  protected function configuration() {
+    return $this->configFactory()->get('indieweb_indieauth.settings');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -51,7 +62,7 @@ class IndieAuthLoginForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = [];
 
-    if (\Drupal::config('indieweb_indieauth.settings')->get('login_enable') && !is_null($this->externalAuthMap)) {
+    if ($this->configuration()->get('login_enable') && !is_null($this->externalAuthMap)) {
 
       if ($this->currentUser()->isAuthenticated()) {
         if ($this->externalAuthMap->get($this->currentUser()->id(), 'indieweb')) {
@@ -147,6 +158,8 @@ class IndieAuthLoginForm extends FormBase {
       $externalAuthMap = $container->get($authMapId);
       $form->setExternalAuthMap($externalAuthMap);
     }
+
+    $form->setConfigFactory($container->get('config.factory'));
 
     return $form;
   }
