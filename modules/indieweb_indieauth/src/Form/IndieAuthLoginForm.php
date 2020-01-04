@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Url;
+use Drupal\externalauth\AuthmapInterface;
 use IndieAuth\Client;
 use p3k\HTTP;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,7 +29,10 @@ class IndieAuthLoginForm extends FormBase {
   protected $externalAuthMap;
 
   /**
+   * Set the authmap service.
+   *
    * @param \Drupal\externalauth\AuthmapInterface $externalAuthMap
+   *   The authmap service.
    */
   public function setExternalAuthMap(AuthmapInterface $externalAuthMap) {
     $this->externalAuthMap = $externalAuthMap;
@@ -47,7 +51,7 @@ class IndieAuthLoginForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = [];
 
-    if (\Drupal::config('indieweb_indieauth.settings')->get('login_enable')) {
+    if (\Drupal::config('indieweb_indieauth.settings')->get('login_enable') && !is_null($this->externalAuthMap)) {
 
       if ($this->currentUser()->isAuthenticated()) {
         /** @var \Drupal\externalauth\AuthmapInterface $external_auth */
