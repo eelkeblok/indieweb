@@ -54,9 +54,7 @@ class IndieAuthLoginForm extends FormBase {
     if (\Drupal::config('indieweb_indieauth.settings')->get('login_enable') && !is_null($this->externalAuthMap)) {
 
       if ($this->currentUser()->isAuthenticated()) {
-        /** @var \Drupal\externalauth\AuthmapInterface $external_auth */
-        $external_authmap = \Drupal::service('externalauth.authmap');
-        if ($external_authmap && $external_authmap->get($this->currentUser()->id(), 'indieweb')) {
+        if ($this->externalAuthMap->get($this->currentUser()->id(), 'indieweb')) {
           return [];
         }
         else {
