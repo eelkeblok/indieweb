@@ -139,9 +139,15 @@ class IndieAuthLoginForm extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
+    /** @var \Drupal\indieweb_indieauth\Form\IndieAuthLoginForm $form */
     $form = parent::create($container);
 
-    $container->get('externalauth.authmap', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+    $authMapId = 'externalauth.authmap';
+    if ($container->has($authMapId)) {
+      $externalAuthMap = $container->get($authMapId);
+      $form->setExternalAuthMap($externalAuthMap);
+    }
+
     return $form;
   }
 
