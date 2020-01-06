@@ -3,7 +3,6 @@
 namespace Drupal\indieweb_indieauth\Form;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
