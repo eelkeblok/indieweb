@@ -61,7 +61,7 @@ class IndieAuthLoginForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = [];
 
-    if ($this->configuration()->get('login_enable') && !is_null($this->externalAuthMap)) {
+    if ($this->configuration()->get('login_enable') && !empty($this->externalAuthMap)) {
 
       if ($this->currentUser()->isAuthenticated()) {
         if ($this->externalAuthMap->get($this->currentUser()->id(), 'indieweb')) {
